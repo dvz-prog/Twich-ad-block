@@ -13,10 +13,30 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Create gradle wrapper structure
+        run: |
+          mkdir -p gradle/wrapper
+          curl -L -o gradle/wrapper/gradle-wrapper.jar \
+            https://repo1.maven.org/maven2/org/gradle/gradle-wrapper/8.1.1/gradle-wrapper-8.1.1.jar
+          curl -L -o gradle/wrapper/gradle-wrapper.properties \
+            https://raw.githubusercontent.com/${{ github.repository }}/main/gradle-wrapper.properties
+          mkdir -p .github/workflows app/src/main/java/com/twitchadb/app
+          mkdir -p app/src/main/res/layout app/src/main/res/values
+
+      - name: Move files to correct structure
+        run: |
+          mv AndroidManifest.xml app/src/main/AndroidManifest.xml 2>/dev/null || true
+          mv activity_main.xml app/src/main/res/layout/activity_main.xml 2>/dev/null || true
+          mv strings.xml app/src/main/res/values/strings.xml 2>/dev/null || true
+          mv MainActivity.java app/src/main/java/com/twitchadb/app/MainActivity.java 2>/dev/null || true
+          mv AdBlocker.java app/src/main/java/com/twitchadb/app/AdBlocker.java 2>/dev/null || true
+          mv TwitchWebViewClient.java app/src/main/java/com/twitchadb/app/TwitchWebViewClient.java 2>/dev/null || true
+          mv app_build.gradle app/build.gradle 2>/dev/null || true
 
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
