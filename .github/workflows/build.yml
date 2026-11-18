@@ -18,25 +18,24 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Create gradle wrapper structure
+      - name: Montar estrutura do projeto
         run: |
+          mkdir -p app/src/main/java/com/twitchadb/app
+          mkdir -p app/src/main/res/layout
+          mkdir -p app/src/main/res/values
           mkdir -p gradle/wrapper
+
+          mv AndroidManifest.xml app/src/main/AndroidManifest.xml
+          mv activity_main.xml app/src/main/res/layout/activity_main.xml
+          mv strings.xml app/src/main/res/values/strings.xml
+          mv MainActivity.java app/src/main/java/com/twitchadb/app/
+          mv AdBlocker.java app/src/main/java/com/twitchadb/app/
+          mv TwitchWebViewClient.java app/src/main/java/com/twitchadb/app/
+          mv app_build.gradle app/build.gradle
+          mv gradle-wrapper.properties gradle/wrapper/gradle-wrapper.properties
+
           curl -L -o gradle/wrapper/gradle-wrapper.jar \
             https://repo1.maven.org/maven2/org/gradle/gradle-wrapper/8.1.1/gradle-wrapper-8.1.1.jar
-          curl -L -o gradle/wrapper/gradle-wrapper.properties \
-            https://raw.githubusercontent.com/${{ github.repository }}/main/gradle-wrapper.properties
-          mkdir -p .github/workflows app/src/main/java/com/twitchadb/app
-          mkdir -p app/src/main/res/layout app/src/main/res/values
-
-      - name: Move files to correct structure
-        run: |
-          mv AndroidManifest.xml app/src/main/AndroidManifest.xml 2>/dev/null || true
-          mv activity_main.xml app/src/main/res/layout/activity_main.xml 2>/dev/null || true
-          mv strings.xml app/src/main/res/values/strings.xml 2>/dev/null || true
-          mv MainActivity.java app/src/main/java/com/twitchadb/app/MainActivity.java 2>/dev/null || true
-          mv AdBlocker.java app/src/main/java/com/twitchadb/app/AdBlocker.java 2>/dev/null || true
-          mv TwitchWebViewClient.java app/src/main/java/com/twitchadb/app/TwitchWebViewClient.java 2>/dev/null || true
-          mv app_build.gradle app/build.gradle 2>/dev/null || true
 
       - name: Grant execute permission to gradlew
         run: chmod +x gradlew
